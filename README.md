@@ -4,11 +4,10 @@
 
 **Project Title**: Library Management System  
 **Level**: Intermediate  
-**Database**: `library_db`
+**Database**: `Library_Project`
 
 This project demonstrates the implementation of a Library Management System using SQL. It includes creating and managing tables, performing CRUD operations, and executing advanced SQL queries. The goal is to showcase skills in database design, manipulation, and querying.
 
-![Library_project](https://github.com/najirh/Library-System-Management---P2/blob/main/library.jpg)
 
 ## Objectives
 
@@ -20,7 +19,6 @@ This project demonstrates the implementation of a Library Management System usin
 ## Project Structure
 
 ### 1. Database Setup
-![ERD](https://github.com/najirh/Library-System-Management---P2/blob/main/library_erd.png)
 
 - **Database Creation**: Created a database named `library_db`.
 - **Table Creation**: Created tables for branches, employees, members, books, issued status, and return status. Each table includes relevant columns and relationships.
@@ -408,7 +406,27 @@ GROUP BY 1, 2
 
 **Task 18: Identify Members Issuing High-Risk Books**  
 Write a query to identify members who have issued books more than twice with the status "damaged" in the books table. Display the member name, book title, and the number of times they've issued damaged books.    
-
+```sql
+SELECT
+    m.member_name,
+    b.book_title,
+    COUNT(ist.issued_id) AS damaged_book_count
+FROM
+    members AS m
+JOIN
+    issued_status AS ist ON m.member_id = ist.issued_member_id
+JOIN
+    books AS b ON ist.issued_book_isbn = b.isbn
+WHERE
+    b.status = 'damaged'
+GROUP BY
+    m.member_name,
+    b.book_title
+HAVING
+    COUNT(ist.issued_id) > 2
+ORDER BY
+    damaged_book_count DESC;
+```
 
 **Task 19: Stored Procedure**
 Objective:
@@ -470,7 +488,6 @@ CALL issue_book('IS156', 'C108', '978-0-375-41398-8', 'E104');
 
 SELECT * FROM books
 WHERE isbn = '978-0-375-41398-8'
-
 ```
 
 
@@ -486,8 +503,26 @@ Description: Write a CTAS query to create a new table that lists each member and
     Member ID
     Number of overdue books
     Total fines
-
-
+```sql
+CREATE TABLE overdue_fines AS
+SELECT
+    ist.issued_member_id AS member_id,
+    COUNT(ist.issued_id) AS number_of_overdue_books,
+    SUM(
+        (CURRENT_DATE - ist.issued_date) * 0.50
+    ) AS total_fines
+FROM
+    issued_status AS ist
+LEFT JOIN
+    return_status AS rs ON ist.issued_id = rs.issued_id
+WHERE
+    rs.return_id IS NULL
+    AND (CURRENT_DATE - ist.issued_date) > 30
+GROUP BY
+    ist.issued_member_id
+ORDER BY
+    total_fines DESC;
+```
 
 ## Reports
 
@@ -499,24 +534,10 @@ Description: Write a CTAS query to create a new table that lists each member and
 
 This project demonstrates the application of SQL skills in creating and managing a library management system. It includes database setup, data manipulation, and advanced querying, providing a solid foundation for data management and analysis.
 
-## How to Use
 
-1. **Clone the Repository**: Clone this repository to your local machine.
-   ```sh
-   git clone https://github.com/najirh/Library-System-Management---P2.git
-   ```
+Author - Shraddha Debata
+This project is part of my portfolio, showcasing the SQL skills essential for data analyst roles. If you have any questions, feedback, or would like to collaborate, feel free to get in touch!
 
-2. **Set Up the Database**: Execute the SQL scripts in the `database_setup.sql` file to create and populate the database.
-3. **Run the Queries**: Use the SQL queries in the `analysis_queries.sql` file to perform the analysis.
-4. **Explore and Modify**: Customize the queries as needed to explore different aspects of the data or answer additional questions.
-
-## Author - Zero Analyst
-
-This project showcases SQL skills essential for database management and analysis. For more content on SQL and data analysis, connect with me through the following channels:
-
-- **YouTube**: [Subscribe to my channel for tutorials and insights](https://www.youtube.com/@zero_analyst)
-- **Instagram**: [Follow me for daily tips and updates](https://www.instagram.com/zero_analyst/)
-- **LinkedIn**: [Connect with me professionally](https://www.linkedin.com/in/najirr)
-- **Discord**: [Join our community for learning and collaboration](https://discord.gg/36h5f2Z5PK)
-
-Thank you for your interest in this project!
+My Socials:
+Find Me on LinkedIn: https://www.linkedin.com/in/shraddha-debata-59726094
+Find me on Tableau: https://public.tableau.com/app/profile/shraddha.debata2941/vizzes
