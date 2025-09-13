@@ -539,5 +539,6 @@ Author - Shraddha Debata
 This project is part of my portfolio, showcasing the SQL skills essential for data analyst roles. If you have any questions, feedback, or would like to collaborate, feel free to get in touch!
 
 My Socials:
+
 Find Me on LinkedIn: https://www.linkedin.com/in/shraddha-debata-59726094
 Find me on Tableau: https://public.tableau.com/app/profile/shraddha.debata2941/vizzes
